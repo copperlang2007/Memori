@@ -208,7 +208,7 @@ web: streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0
 
 **runtime.txt**:
 ```
-python-3.11.0
+python-3.11
 ```
 
 2. Deploy:

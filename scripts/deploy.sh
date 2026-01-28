@@ -34,11 +34,16 @@ check_docker() {
 
 # Check if Docker Compose is installed
 check_docker_compose() {
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
+    if docker compose version &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker compose"
+        print_info "Docker Compose V2 is installed"
+    elif command -v docker-compose &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker-compose"
+        print_info "Docker Compose V1 is installed"
+    else
         print_error "Docker Compose is not installed. Please install Docker Compose first."
         exit 1
     fi
-    print_info "Docker Compose is installed"
 }
 
 # Setup environment file
@@ -62,14 +67,14 @@ setup_env() {
 # Build Docker images
 build_images() {
     print_info "Building Docker images..."
-    docker-compose build
+    $DOCKER_COMPOSE_CMD build
     print_info "Build complete!"
 }
 
 # Start services
 start_services() {
     print_info "Starting services..."
-    docker-compose up -d
+    $DOCKER_COMPOSE_CMD up -d
     print_info "Services started!"
     echo ""
     print_info "Access your services at:"
@@ -84,7 +89,7 @@ start_services() {
 # Stop services
 stop_services() {
     print_info "Stopping services..."
-    docker-compose down
+    $DOCKER_COMPOSE_CMD down
     print_info "Services stopped!"
 }
 
@@ -92,16 +97,16 @@ stop_services() {
 view_logs() {
     service=$1
     if [ -z "$service" ]; then
-        docker-compose logs -f
+        $DOCKER_COMPOSE_CMD logs -f
     else
-        docker-compose logs -f "$service"
+        $DOCKER_COMPOSE_CMD logs -f "$service"
     fi
 }
 
 # Check service health
 check_health() {
     print_info "Checking service health..."
-    docker-compose ps
+    $DOCKER_COMPOSE_CMD ps
 }
 
 # Clean up
@@ -110,7 +115,7 @@ cleanup() {
     read -r response
     if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
         print_info "Cleaning up..."
-        docker-compose down -v --rmi all
+        $DOCKER_COMPOSE_CMD down -v --rmi all
         print_info "Cleanup complete!"
     else
         print_info "Cleanup cancelled"

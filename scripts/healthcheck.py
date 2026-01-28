@@ -41,7 +41,12 @@ def check_database():
     """Check if database connection is configured."""
     db_string = os.getenv('MEMORI_DATABASE__CONNECTION_STRING')
     if db_string:
-        print(f"✓ Database configured: {db_string.split('://')[0]}")
+        # Sanitize connection string for logging - only show database type
+        try:
+            db_type = db_string.split('://')[0] if '://' in db_string else 'unknown'
+            print(f"✓ Database configured: {db_type}")
+        except Exception:
+            print("✓ Database configured")
         return True
     else:
         print("ℹ Database not explicitly configured (will use default SQLite)")
@@ -50,7 +55,7 @@ def check_database():
 def check_api_keys():
     """Check if API keys are configured."""
     openai_key = os.getenv('OPENAI_API_KEY')
-    if openai_key and openai_key.startswith('sk-'):
+    if openai_key and len(openai_key) > 10:  # Basic length check
         print("✓ OpenAI API key configured")
         return True
     else:

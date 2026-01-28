@@ -90,12 +90,7 @@ Desktop.ini
 
 # Project specific
 examples/
-scripts/
 tests/
 *.md
 !README.md
-CHANGELOG.md
-CONTRIBUTING.md
-CODE_OF_CONDUCT.md
-ROADMAP.md
 LICENSE

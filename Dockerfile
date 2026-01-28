@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 FROM base as production
 
 # Copy requirements first for better caching
-COPY requirements.txt requirements-dev.txt ./
+COPY requirements.txt ./
 COPY pyproject.toml ./
 
 # Install Python dependencies

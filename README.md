@@ -258,6 +258,36 @@ For detailed architecture documentation, see [docs/architecture.md](https://memo
 
 ---
 
+## Deployment
+
+Deploy Memori in minutes with Docker, Streamlit Cloud, or your favorite platform.
+
+### Quick Deploy with Docker
+
+```bash
+git clone https://github.com/GibsonAI/memori.git
+cd memori
+./scripts/deploy.sh setup  # Create .env file
+# Add your OPENAI_API_KEY to .env
+./scripts/deploy.sh start  # Start all services
+```
+
+Access your services:
+- 📚 Documentation: http://localhost:8000
+- 📔 Personal Diary: http://localhost:8501
+- 🔍 Researcher: http://localhost:8502
+
+### Deployment Options
+
+- **Docker**: Full-featured containerized deployment ([Guide](DEPLOYMENT.md))
+- **Streamlit Cloud**: Free hosting for demo apps ([Quick Start](QUICKSTART.md))
+- **Cloud Platforms**: Deploy to AWS, GCP, Azure, Railway, Render ([Guide](DEPLOYMENT.md))
+- **GitHub Pages**: Documentation auto-deployment
+
+📖 **[Full Deployment Guide](DEPLOYMENT.md)** | 🚀 **[Quick Start](QUICKSTART.md)**
+
+---
+
 ## Contributing
 
 We welcome contributions from the community! Please see our [Contributing Guidelines](./CONTRIBUTING.md) for details on:

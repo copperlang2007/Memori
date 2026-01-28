@@ -201,16 +201,12 @@ def test_postgresql_specific_features():
                 print(f"   ✅ tsquery creation: {result[0]}")
 
             # Test ranking
-            result = session.execute(
-                text(
-                    """
+            result = session.execute(text("""
                     SELECT ts_rank(
                         to_tsvector('english', 'PostgreSQL provides excellent full-text search'),
                         to_tsquery('english', 'PostgreSQL & search')
                     ) as rank
-                """
-                )
-            ).fetchone()
+                """)).fetchone()
 
             if result:
                 print(f"   ✅ ts_rank function: {result[0]:.4f}")
@@ -220,15 +216,11 @@ def test_postgresql_specific_features():
 
         try:
             with db_manager.SessionLocal() as session:
-                result = session.execute(
-                    text(
-                        """
+                result = session.execute(text("""
                         SELECT indexname FROM pg_indexes
                         WHERE indexname LIKE '%search_vector%'
                         AND tablename IN ('short_term_memory', 'long_term_memory')
-                    """
-                    )
-                ).fetchall()
+                    """)).fetchall()
 
                 if result:
                     print(f"   ✅ Found {len(result)} search vector indexes")

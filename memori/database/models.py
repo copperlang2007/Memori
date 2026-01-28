@@ -249,43 +249,35 @@ def configure_postgresql_fts(engine):
                 )
 
                 # Create triggers to maintain tsvector
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE OR REPLACE FUNCTION update_short_term_search_vector() RETURNS trigger AS $$
                     BEGIN
                         NEW.search_vector := to_tsvector('english', COALESCE(NEW.searchable_content, '') || ' ' || COALESCE(NEW.summary, ''));
                         RETURN NEW;
                     END
                     $$ LANGUAGE plpgsql;
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER update_short_term_search_vector_trigger
                     BEFORE INSERT OR UPDATE ON short_term_memory
                     FOR EACH ROW EXECUTE FUNCTION update_short_term_search_vector();
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE OR REPLACE FUNCTION update_long_term_search_vector() RETURNS trigger AS $$
                     BEGIN
                         NEW.search_vector := to_tsvector('english', COALESCE(NEW.searchable_content, '') || ' ' || COALESCE(NEW.summary, '') || ' ' || COALESCE(NEW.topic, ''));
                         RETURN NEW;
                     END
                     $$ LANGUAGE plpgsql;
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER update_long_term_search_vector_trigger
                     BEFORE INSERT OR UPDATE ON long_term_memory
                     FOR EACH ROW EXECUTE FUNCTION update_long_term_search_vector();
-                """
-                )
+                """)
 
                 conn.commit()
             except Exception:
@@ -299,8 +291,7 @@ def configure_sqlite_fts(engine):
         with engine.connect() as conn:
             try:
                 # Create FTS5 virtual table for SQLite
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE VIRTUAL TABLE IF NOT EXISTS memory_search_fts USING fts5(
                         memory_id UNINDEXED,
                         memory_type UNINDEXED,
@@ -311,47 +302,38 @@ def configure_sqlite_fts(engine):
                         summary,
                         category_primary
                     )
-                """
-                )
+                """)
 
                 # Create triggers to maintain FTS5 index
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER IF NOT EXISTS short_term_memory_fts_insert AFTER INSERT ON short_term_memory
                     BEGIN
                         INSERT INTO memory_search_fts(memory_id, memory_type, user_id, assistant_id, session_id, searchable_content, summary, category_primary)
                         VALUES (NEW.memory_id, 'short_term', NEW.user_id, NEW.assistant_id, NEW.session_id, NEW.searchable_content, NEW.summary, NEW.category_primary);
                     END
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER IF NOT EXISTS long_term_memory_fts_insert AFTER INSERT ON long_term_memory
                     BEGIN
                         INSERT INTO memory_search_fts(memory_id, memory_type, user_id, assistant_id, session_id, searchable_content, summary, category_primary)
                         VALUES (NEW.memory_id, 'long_term', NEW.user_id, NEW.assistant_id, NEW.session_id, NEW.searchable_content, NEW.summary, NEW.category_primary);
                     END
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER IF NOT EXISTS short_term_memory_fts_delete AFTER DELETE ON short_term_memory
                     BEGIN
                         DELETE FROM memory_search_fts WHERE memory_id = OLD.memory_id AND memory_type = 'short_term';
                     END
-                """
-                )
+                """)
 
-                conn.execute(
-                    """
+                conn.execute("""
                     CREATE TRIGGER IF NOT EXISTS long_term_memory_fts_delete AFTER DELETE ON long_term_memory
                     BEGIN
                         DELETE FROM memory_search_fts WHERE memory_id = OLD.memory_id AND memory_type = 'long_term';
                     END
-                """
-                )
+                """)
 
                 conn.commit()
             except Exception:

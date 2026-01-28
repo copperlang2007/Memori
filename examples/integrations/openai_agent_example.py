@@ -103,8 +103,7 @@ def remember_user_info(info: str) -> str:
 # Create the OpenAI Agent with memory capabilities
 agent = Agent(
     name="Memory-Enhanced Assistant",
-    instructions=dedent(
-        """
+    instructions=dedent("""
         You are a helpful AI assistant with the ability to remember past conversations
         and user preferences. You have access to two powerful memory functions:
 
@@ -122,8 +121,7 @@ agent = Agent(
         - Reference past conversations naturally when relevant
 
         Be helpful, friendly, and make use of your memory to provide personalized assistance.
-    """
-    ),
+    """),
     tools=[search_memory, remember_user_info],
 )
 

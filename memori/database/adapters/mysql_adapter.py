@@ -158,15 +158,13 @@ class MySQLSearchAdapter(BaseSearchAdapter):
                 )
 
                 # Check if we have FULLTEXT indexes
-                cursor.execute(
-                    """
+                cursor.execute("""
                     SELECT COUNT(*) as fulltext_count
                     FROM information_schema.STATISTICS
                     WHERE TABLE_SCHEMA = DATABASE()
                     AND (TABLE_NAME = 'short_term_memory' OR TABLE_NAME = 'long_term_memory')
                     AND INDEX_TYPE = 'FULLTEXT'
-                """
-                )
+                """)
                 fulltext_result = cursor.fetchone()
                 has_fulltext = fulltext_result and fulltext_result["fulltext_count"] > 0
 
@@ -286,8 +284,7 @@ class MySQLSearchAdapter(BaseSearchAdapter):
                 cursor = conn.cursor(dictionary=True)
 
                 # Get FULLTEXT index information
-                cursor.execute(
-                    """
+                cursor.execute("""
                     SELECT
                         TABLE_NAME,
                         INDEX_NAME,
@@ -297,15 +294,13 @@ class MySQLSearchAdapter(BaseSearchAdapter):
                     WHERE TABLE_SCHEMA = DATABASE()
                     AND INDEX_TYPE = 'FULLTEXT'
                     ORDER BY TABLE_NAME, INDEX_NAME
-                """
-                )
+                """)
 
                 fulltext_indexes = cursor.fetchall()
                 stats["fulltext_indexes"] = fulltext_indexes
 
                 # Get table sizes
-                cursor.execute(
-                    """
+                cursor.execute("""
                     SELECT
                         TABLE_NAME,
                         TABLE_ROWS,
@@ -314,8 +309,7 @@ class MySQLSearchAdapter(BaseSearchAdapter):
                     FROM information_schema.TABLES
                     WHERE TABLE_SCHEMA = DATABASE()
                     AND TABLE_NAME IN ('short_term_memory', 'long_term_memory')
-                """
-                )
+                """)
 
                 table_stats = cursor.fetchall()
                 stats["table_statistics"] = table_stats

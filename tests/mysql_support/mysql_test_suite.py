@@ -160,17 +160,13 @@ def run_mysql_fulltext_test(database_url):
             # Test FULLTEXT search capabilities
             from sqlalchemy import text
 
-            result = session.execute(
-                text(
-                    """
+            result = session.execute(text("""
                 SELECT COUNT(*) as index_count
                 FROM information_schema.STATISTICS
                 WHERE table_schema = DATABASE()
                 AND index_type = 'FULLTEXT'
                 AND table_name IN ('short_term_memory', 'long_term_memory')
-            """
-                )
-            )
+            """))
 
             index_count = result.fetchone()[0]
             print(f"   📊 Found {index_count} FULLTEXT indexes")

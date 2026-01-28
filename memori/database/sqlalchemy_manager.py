@@ -336,9 +336,7 @@ class SQLAlchemyDatabaseManager:
         """Setup SQLite FTS5"""
         try:
             # Create FTS5 virtual table
-            conn.execute(
-                text(
-                    """
+            conn.execute(text("""
                 CREATE VIRTUAL TABLE IF NOT EXISTS memory_search_fts USING fts5(
                     memory_id,
                     memory_type,
@@ -351,34 +349,24 @@ class SQLAlchemyDatabaseManager:
                     content='',
                     contentless_delete=1
                 )
-            """
-                )
-            )
+            """))
 
             # Create triggers
-            conn.execute(
-                text(
-                    """
+            conn.execute(text("""
                 CREATE TRIGGER IF NOT EXISTS short_term_memory_fts_insert AFTER INSERT ON short_term_memory
                 BEGIN
                     INSERT INTO memory_search_fts(memory_id, memory_type, user_id, assistant_id, session_id, searchable_content, summary, category_primary)
                     VALUES (NEW.memory_id, 'short_term', NEW.user_id, NEW.assistant_id, NEW.session_id, NEW.searchable_content, NEW.summary, NEW.category_primary);
                 END
-            """
-                )
-            )
+            """))
 
-            conn.execute(
-                text(
-                    """
+            conn.execute(text("""
                 CREATE TRIGGER IF NOT EXISTS long_term_memory_fts_insert AFTER INSERT ON long_term_memory
                 BEGIN
                     INSERT INTO memory_search_fts(memory_id, memory_type, user_id, assistant_id, session_id, searchable_content, summary, category_primary)
                     VALUES (NEW.memory_id, 'long_term', NEW.user_id, NEW.assistant_id, NEW.session_id, NEW.searchable_content, NEW.summary, NEW.category_primary);
                 END
-            """
-                )
-            )
+            """))
 
             logger.info("SQLite FTS5 setup completed")
 
@@ -389,14 +377,12 @@ class SQLAlchemyDatabaseManager:
         """Setup MySQL FULLTEXT indexes"""
         try:
             # Check if indexes exist before creating them
-            index_check_query = text(
-                """
+            index_check_query = text("""
                 SELECT COUNT(*) as index_count
                 FROM information_schema.statistics
                 WHERE table_schema = DATABASE()
                 AND index_name IN ('ft_short_term_search', 'ft_long_term_search')
-            """
-            )
+            """)
 
             result = conn.execute(index_check_query)
             existing_indexes = result.fetchone()[0]
@@ -407,16 +393,12 @@ class SQLAlchemyDatabaseManager:
                 )
 
                 # Check and create short_term_memory index if missing
-                short_term_check = conn.execute(
-                    text(
-                        """
+                short_term_check = conn.execute(text("""
                         SELECT COUNT(*) FROM information_schema.statistics
                         WHERE table_schema = DATABASE()
                         AND table_name = 'short_term_memory'
                         AND index_name = 'ft_short_term_search'
-                        """
-                    )
-                ).fetchone()[0]
+                        """)).fetchone()[0]
 
                 if short_term_check == 0:
                     conn.execute(
@@ -427,16 +409,12 @@ class SQLAlchemyDatabaseManager:
                     logger.info("Created ft_short_term_search index")
 
                 # Check and create long_term_memory index if missing
-                long_term_check = conn.execute(
-                    text(
-                        """
+                long_term_check = conn.execute(text("""
                         SELECT COUNT(*) FROM information_schema.statistics
                         WHERE table_schema = DATABASE()
                         AND table_name = 'long_term_memory'
                         AND index_name = 'ft_long_term_search'
-                        """
-                    )
-                ).fetchone()[0]
+                        """)).fetchone()[0]
 
                 if long_term_check == 0:
                     conn.execute(
@@ -483,29 +461,21 @@ class SQLAlchemyDatabaseManager:
             )
 
             # Create update functions and triggers
-            conn.execute(
-                text(
-                    """
+            conn.execute(text("""
                 CREATE OR REPLACE FUNCTION update_short_term_search_vector() RETURNS trigger AS $$
                 BEGIN
                     NEW.search_vector := to_tsvector('english', COALESCE(NEW.searchable_content, '') || ' ' || COALESCE(NEW.summary, ''));
                     RETURN NEW;
                 END
                 $$ LANGUAGE plpgsql;
-            """
-                )
-            )
+            """))
 
-            conn.execute(
-                text(
-                    """
+            conn.execute(text("""
                 DROP TRIGGER IF EXISTS update_short_term_search_vector_trigger ON short_term_memory;
                 CREATE TRIGGER update_short_term_search_vector_trigger
                 BEFORE INSERT OR UPDATE ON short_term_memory
                 FOR EACH ROW EXECUTE FUNCTION update_short_term_search_vector();
-            """
-                )
-            )
+            """))
 
             logger.info("PostgreSQL FTS setup completed")
 

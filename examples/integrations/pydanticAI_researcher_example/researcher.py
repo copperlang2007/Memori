@@ -189,8 +189,7 @@ class Researcher:
                 Tool(web_search_tool, name="web_search"),
                 Tool(research_memory_search_tool, name="search_memory"),
             ],
-            system_prompt=dedent(
-                """\
+            system_prompt=dedent("""\
                 You are Professor X-1000, a distinguished AI research scientist with MEMORY CAPABILITIES!
 
                 🧠 Your enhanced abilities:
@@ -217,8 +216,7 @@ class Researcher:
                 8. End with actionable takeaways and future implications
 
                 Always mention if you're building upon previous research sessions!
-                """
-            ),
+                """),
         )
 
         return agent
@@ -234,8 +232,7 @@ class Researcher:
             "openai:gpt-4o",
             deps_type=MemoryDeps,
             tools=[Tool(memory_agent_search_tool, name="search_memory")],
-            system_prompt=dedent(
-                """\
+            system_prompt=dedent("""\
                 You are the Research Memory Assistant, specialized in helping users recall their research history!
 
                 When you search memory and find results, provide a clear summary of what was found.
@@ -265,8 +262,7 @@ class Researcher:
                 5. If they ask for specific research, provide detailed information
 
                 Always search memory first, then provide organized, helpful summaries!
-                """
-            ),
+                """),
         )
 
         return agent

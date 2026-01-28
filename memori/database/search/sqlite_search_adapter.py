@@ -101,21 +101,13 @@ class SQLiteSearchAdapter(BaseSearchAdapter):
             WHERE memory_search_fts MATCH ? AND fts.namespace = ?"""
 
         if category_clause:
-            sql_query = (
-                base_query
-                + " "
-                + category_clause
-                + """
+            sql_query = base_query + " " + category_clause + """
             ORDER BY rank, importance_score DESC
             LIMIT ?"""
-            )
         else:
-            sql_query = (
-                base_query
-                + """
+            sql_query = base_query + """
             ORDER BY rank, importance_score DESC
             LIMIT ?"""
-            )
 
         return self.connector.execute_query(sql_query, params)
 

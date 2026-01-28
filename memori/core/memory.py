@@ -728,15 +728,13 @@ class Memori:
 
                 # Insert directly into short-term memory with conscious_context category
                 session.execute(
-                    text(
-                        """INSERT INTO short_term_memory (
+                    text("""INSERT INTO short_term_memory (
                         memory_id, processed_data, importance_score, category_primary,
                         retention_type, user_id, assistant_id, session_id, created_at, expires_at,
                         searchable_content, summary, is_permanent_context
                     ) VALUES (:memory_id, :processed_data, :importance_score, :category_primary,
                         :retention_type, :user_id, :assistant_id, :session_id, :created_at, :expires_at,
-                        :searchable_content, :summary, :is_permanent_context)"""
-                    ),
+                        :searchable_content, :summary, :is_permanent_context)"""),
                     {
                         "memory_id": short_term_id,
                         "processed_data": processed_data,
@@ -1244,16 +1242,14 @@ class Memori:
                     # Get ALL short-term memories (no limit) ordered by importance and recency
                     # This gives the complete conscious context as single initial injection
                     result = conn.execute(
-                        text(
-                            """
+                        text("""
                         SELECT memory_id, processed_data, importance_score,
                                category_primary, summary, searchable_content,
                                created_at, access_count
                         FROM short_term_memory
                         WHERE user_id = :user_id AND (expires_at IS NULL OR expires_at > :current_time)
                         ORDER BY importance_score DESC, created_at DESC
-                        """
-                        ),
+                        """),
                         {"user_id": self.user_id, "current_time": datetime.now()},
                     )
 

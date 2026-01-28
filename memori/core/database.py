@@ -161,8 +161,7 @@ class DatabaseManager:
             cursor = conn.cursor()
 
             # Basic tables for fallback
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS chat_history (
                     chat_id TEXT PRIMARY KEY,
                     user_input TEXT NOT NULL,
@@ -174,11 +173,9 @@ class DatabaseManager:
                     tokens_used INTEGER DEFAULT 0,
                     metadata TEXT DEFAULT '{}'
                 )
-            """
-            )
+            """)
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS short_term_memory (
                     memory_id TEXT PRIMARY KEY,
                     chat_id TEXT,
@@ -194,11 +191,9 @@ class DatabaseManager:
                     searchable_content TEXT NOT NULL,
                     summary TEXT NOT NULL
                 )
-            """
-            )
+            """)
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 CREATE TABLE IF NOT EXISTS long_term_memory (
                     memory_id TEXT PRIMARY KEY,
                     original_chat_id TEXT,
@@ -216,8 +211,7 @@ class DatabaseManager:
                     relevance_score REAL DEFAULT 0.5,
                     actionability_score REAL DEFAULT 0.5
                 )
-            """
-            )
+            """)
 
             conn.commit()
             logger.info("Basic database schema created")

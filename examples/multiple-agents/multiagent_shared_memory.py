@@ -39,8 +39,7 @@ product_manager = Agent(
     model=OpenAIChat(id="gpt-4o"),
     show_tool_calls=True,
     markdown=True,
-    instructions=dedent(
-        """\
+    instructions=dedent("""\
         You are the Product Manager for an AI development team. Your responsibilities:
 
         1. **Always search shared memory first** for project history, requirements, and decisions
@@ -57,8 +56,7 @@ product_manager = Agent(
         - Share context with other team members through shared memory
 
         Always reference and build upon previous team discussions stored in shared memory.
-        """
-    ),
+        """),
 )
 
 # Developer Agent
@@ -68,8 +66,7 @@ developer = Agent(
     model=OpenAIChat(id="gpt-4o"),
     show_tool_calls=True,
     markdown=True,
-    instructions=dedent(
-        """\
+    instructions=dedent("""\
         You are the Lead Developer for an AI development team. Your responsibilities:
 
         1. **Always search shared memory first** for project context, requirements, and technical decisions
@@ -86,8 +83,7 @@ developer = Agent(
         - Share technical context and constraints with the team
 
         Always build upon previous technical discussions and decisions stored in shared memory.
-        """
-    ),
+        """),
 )
 
 # Quality Assurance Agent
@@ -97,8 +93,7 @@ qa_engineer = Agent(
     model=OpenAIChat(id="gpt-4o"),
     show_tool_calls=True,
     markdown=True,
-    instructions=dedent(
-        """\
+    instructions=dedent("""\
         You are the QA Engineer for an AI development team. Your responsibilities:
 
         1. **Always search shared memory first** for project requirements, test cases, and quality standards
@@ -115,8 +110,7 @@ qa_engineer = Agent(
         - Share testing insights and quality metrics with the team
 
         Always reference previous testing strategies and quality discussions from shared memory.
-        """
-    ),
+        """),
 )
 
 # Project Coordinator Agent
@@ -126,8 +120,7 @@ project_coordinator = Agent(
     model=OpenAIChat(id="gpt-4o"),
     show_tool_calls=True,
     markdown=True,
-    instructions=dedent(
-        """\
+    instructions=dedent("""\
         You are the Project Coordinator for an AI development team. Your responsibilities:
 
         1. **Always search shared memory first** for project timelines, meetings, and coordination history
@@ -144,8 +137,7 @@ project_coordinator = Agent(
         - Share project status and coordination insights with the team
 
         Always build upon previous project coordination and timeline discussions from shared memory.
-        """
-    ),
+        """),
 )
 
 

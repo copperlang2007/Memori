@@ -75,8 +75,7 @@ def main():
             st.caption("Missing API keys – some features may not work ⚠️")
 
         st.header("About This Project")
-        st.markdown(
-            """
+        st.markdown("""
         This demo showcases:
         - **Research Agent**: Uses Linkup for real-time web research
         - **Memori Integration**: Remembers all research sessions
@@ -87,8 +86,7 @@ def main():
         - 🧠 Remember all previous research
         - 📚 Build upon past research
         - 💾 Store findings for future reference
-        """
-        )
+        """)
 
         st.header("Research History")
         if st.button("📊 View All Research"):

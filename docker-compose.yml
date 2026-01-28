@@ -1,0 +1,144 @@
+services:
+  # Documentation site
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: docs
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docs:/app/docs
+      - ./mkdocs.yml:/app/mkdocs.yml
+    environment:
+      - LIVE_RELOAD=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+  # Personal Diary Assistant Demo
+  diary-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: demos
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./demos/personal_diary_assistant:/app/demos/personal_diary_assistant
+      - diary-data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MEMORI_DATABASE__CONNECTION_STRING=sqlite:///data/diary.db
+    command: >
+      streamlit run demos/personal_diary_assistant/streamlit_app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+  # Researcher Agent Demo
+  researcher-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: demos
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./demos/researcher_agent:/app/demos/researcher_agent
+      - researcher-data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - TAVILY_API_KEY=${TAVILY_API_KEY:-}
+      - MEMORI_DATABASE__CONNECTION_STRING=sqlite:///data/researcher.db
+    command: >
+      streamlit run demos/researcher_agent/app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+  # Travel Planner Demo
+  travel-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: demos
+    ports:
+      - "8503:8501"
+    volumes:
+      - ./demos/travel_planner:/app/demos/travel_planner
+      - travel-data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MEMORI_DATABASE__CONNECTION_STRING=sqlite:///data/travel.db
+    command: >
+      streamlit run demos/travel_planner/app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+  # Job Search Agent Demo
+  job-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: demos
+    ports:
+      - "8504:8501"
+    volumes:
+      - ./demos/job_search_agent:/app/demos/job_search_agent
+      - job-data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MEMORI_DATABASE__CONNECTION_STRING=sqlite:///data/jobs.db
+    command: >
+      streamlit run demos/job_search_agent/app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+  # Product Launch Agent Demo
+  product-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: demos
+    ports:
+      - "8505:8501"
+    volumes:
+      - ./demos/product_launch_agent:/app/demos/product_launch_agent
+      - product-data:/app/data
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MEMORI_DATABASE__CONNECTION_STRING=sqlite:///data/product.db
+    command: >
+      streamlit run demos/product_launch_agent/chat_app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+    restart: unless-stopped
+    networks:
+      - memori-network
+
+volumes:
+  diary-data:
+  researcher-data:
+  travel-data:
+  job-data:
+  product-data:
+
+networks:
+  memori-network:
+    driver: bridge

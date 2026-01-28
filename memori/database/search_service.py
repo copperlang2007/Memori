@@ -408,8 +408,7 @@ class SearchService:
                             params[f"cat_{i}"] = cat
 
                     # Use direct SQL query for more reliable results
-                    sql_query = text(
-                        f"""
+                    sql_query = text(f"""
                         SELECT
                             memory_id,
                             processed_data,
@@ -427,8 +426,7 @@ class SearchService:
                         {category_clause}
                         ORDER BY search_score DESC
                         LIMIT :short_limit
-                    """
-                    )
+                    """)
 
                     params["short_limit"] = short_limit
 
@@ -495,8 +493,7 @@ class SearchService:
                             params[f"cat_{i}"] = cat
 
                     # Use direct SQL query for more reliable results
-                    sql_query = text(
-                        f"""
+                    sql_query = text(f"""
                         SELECT
                             memory_id,
                             processed_data,
@@ -514,8 +511,7 @@ class SearchService:
                         {category_clause}
                         ORDER BY search_score DESC
                         LIMIT :long_limit
-                    """
-                    )
+                    """)
 
                     params["long_limit"] = long_limit
 
@@ -611,8 +607,7 @@ class SearchService:
                     category_clause = "AND category_primary = ANY(:category_list)"
 
                 # Use direct SQL to avoid SQLAlchemy Row conversion issues
-                short_sql = text(
-                    f"""
+                short_sql = text(f"""
                     SELECT memory_id, processed_data, importance_score, created_at, summary, category_primary,
                            ts_rank(search_vector, to_tsquery('english', :query)) as search_score,
                            'short_term' as memory_type, 'postgresql_fts' as search_strategy
@@ -623,8 +618,7 @@ class SearchService:
                     {category_clause}
                     ORDER BY search_score DESC
                     LIMIT :limit
-                """
-                )
+                """)
 
                 params = {
                     "user_id": user_id,
@@ -676,8 +670,7 @@ class SearchService:
                     category_clause = "AND category_primary = ANY(:category_list)"
 
                 # Use direct SQL to avoid SQLAlchemy Row conversion issues
-                long_sql = text(
-                    f"""
+                long_sql = text(f"""
                     SELECT memory_id, processed_data, importance_score, created_at, summary, category_primary,
                            ts_rank(search_vector, to_tsquery('english', :query)) as search_score,
                            'long_term' as memory_type, 'postgresql_fts' as search_strategy
@@ -688,8 +681,7 @@ class SearchService:
                     {category_clause}
                     ORDER BY search_score DESC
                     LIMIT :limit
-                """
-                )
+                """)
 
                 params = {
                     "user_id": user_id,

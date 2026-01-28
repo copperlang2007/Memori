@@ -27,8 +27,7 @@ coach = Agent(
     model=OpenAIChat(id="gpt-4o"),
     show_tool_calls=True,
     markdown=True,
-    instructions=dedent(
-        """\
+    instructions=dedent("""\
         You are a personal fitness coach with persistent memory. Your role is to:
 
         1. Always search your memory first for the client's fitness history, goals, and preferences
@@ -39,8 +38,7 @@ coach = Agent(
 
         If this is a new client, introduce yourself and gather basic fitness information.
         Always reference past conversations to show continuity and progress tracking.
-    """
-    ),
+    """),
 )
 
 # Initial consultation - gathering basic information

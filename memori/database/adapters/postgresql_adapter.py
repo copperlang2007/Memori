@@ -272,20 +272,16 @@ class PostgreSQLSearchAdapter(BaseSearchAdapter):
                 cursor.execute(mv_sql)
 
                 # Create index on materialized view
-                cursor.execute(
-                    """
+                cursor.execute("""
                     CREATE INDEX IF NOT EXISTS idx_memory_search_mv_fts
                     ON memory_search_mv
                     USING gin(search_vector)
-                """
-                )
+                """)
 
-                cursor.execute(
-                    """
+                cursor.execute("""
                     CREATE INDEX IF NOT EXISTS idx_memory_search_mv_filter
                     ON memory_search_mv (user_id, assistant_id, category_primary, memory_type)
-                """
-                )
+                """)
 
                 conn.commit()
                 logger.info(

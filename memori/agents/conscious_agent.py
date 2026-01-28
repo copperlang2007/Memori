@@ -366,13 +366,11 @@ class ConsciouscAgent:
             with db_manager._get_connection() as connection:
                 # Check if similar content already exists in short-term memory
                 existing_check = connection.execute(
-                    text(
-                        """SELECT COUNT(*) FROM short_term_memory
+                    text("""SELECT COUNT(*) FROM short_term_memory
                            WHERE user_id = :user_id
                            AND category_primary = 'conscious_context'
                            AND (searchable_content = :searchable_content
-                                OR summary = :summary)"""
-                    ),
+                                OR summary = :summary)"""),
                     {
                         "user_id": user_id,
                         "searchable_content": searchable_content,
@@ -558,11 +556,9 @@ class ConsciouscAgent:
                 with db_manager._get_connection() as connection:
                     for memory_id in memory_ids:
                         connection.execute(
-                            text(
-                                """UPDATE long_term_memory
+                            text("""UPDATE long_term_memory
                                SET conscious_processed = :conscious_processed
-                               WHERE memory_id = :memory_id AND user_id = :user_id"""
-                            ),
+                               WHERE memory_id = :memory_id AND user_id = :user_id"""),
                             {
                                 "memory_id": memory_id,
                                 "user_id": user_id,

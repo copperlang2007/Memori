@@ -379,7 +379,9 @@ def main():
         if success_rate >= 80:
             print("✅ MySQL + LiteLLM integration is working excellently!")
         elif success_rate >= 60:
-            print("⚠️  MySQL + LiteLLM integration is working but may need optimization")
+            print(
+                "⚠️  MySQL + LiteLLM integration is working but may need optimization"
+            )
         else:
             print("❌ MySQL + LiteLLM integration needs investigation")
 
